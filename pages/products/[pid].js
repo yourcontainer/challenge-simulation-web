@@ -32,11 +32,12 @@ export default function ProductDetails(props) {
   useEffect(() => {
     if(pid) {
       fetch(`/api/products/${pid}`)
-        .then((res) => {
+        .then(async (res) => {
           if (!res.ok) {
             return;
           }
-          return setProduct(res.json())
+          const product = await res.json();
+          return setProduct(product)
         })
     }
   }, [pid]);
