@@ -20,7 +20,7 @@ import {
   Pressable,
   HamburgerIcon,
 } from "native-base";
-
+import Header from '../_header';
 // Start editing here, save and see your changes.
 export default function ProductDetails(props) {
   const router = useRouter();
@@ -42,14 +42,7 @@ export default function ProductDetails(props) {
               />
             </AspectRatio>
           </Link>
-          <Menu trigger={triggerProps => (
-            <Pressable {...triggerProps}>
-                <HamburgerIcon size="lg" />
-              </Pressable>
-            )}>
-            <Menu.Item><Link href="/">Home</Link></Menu.Item>
-            <Menu.Item><Link href="/products">Catalog</Link></Menu.Item>
-          </Menu>
+          <Header />
         </HStack>
         <Heading size="2xl">Product Detail for ...</Heading>
         <Text>Need to fetch details for Product ID: {pid}</Text>

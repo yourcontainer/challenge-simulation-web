@@ -18,10 +18,18 @@ import {
   Menu,
   Pressable,
   HamburgerIcon,
+  useBreakpointValue
 } from "native-base";
+import Header from '../_header';
 
 // Start editing here, save and see your changes.
 export default function ProductCatalog({ products }) {
+  const flexDir = useBreakpointValue({
+    base: "column",
+    xl: "row"
+  });
+  const isMobile = flexDir === "column";
+
   return (
     <Center
       flex={1}
@@ -39,29 +47,26 @@ export default function ProductCatalog({ products }) {
               />
             </AspectRatio>
           </Link>
-          <Menu trigger={triggerProps => (
-            <Pressable {...triggerProps}>
-                <HamburgerIcon size="lg" />
-              </Pressable>
-            )}>
-            <Menu.Item><Link href="/">Home</Link></Menu.Item>
-            <Menu.Item><Link href="/products">Catalog</Link></Menu.Item>
-          </Menu>
+          <Header />
         </HStack>
         <Heading size="2xl">Product Catalog</Heading>
-        {products.map(({ id, name, year, heroImage }) => (
-          <Link key={id} href={`/products/${id}`}>
-            <VStack alignContent="center" space={8}>
-              <Center padding="sm" _dark={{ bg: 'gray.600' }} _light={{ bg: 'gray.100' }}>
-                <Text fontSize="xl">{name} ({year})</Text>
-                <AspectRatio w={48} ratio={16 / 9}>
-                  <Image source={{ uri: heroImage }} alt={name} />
-                </AspectRatio>
-                {/* <Image source={{ uri: heroImage }} size={48} alt={name} /> */}
-              </Center>
-            </VStack>
-          </Link>
-        ))}
+        <Box maxW={600} flexDirection={flexDir} gap={1} flexWrap="wrap" justifyContent="space-between">
+          {products.map(({ id, name, year, heroImage, description }) => (
+            <Link key={id} href={`/products/${id}`}>
+              <VStack alignContent="center" space={8}>
+                <Center padding="sm" _dark={{ bg: 'gray.600' }} _light={{ bg: 'gray.100' }}>
+                  <Text fontSize="xl">{name} ({year})</Text>
+                  <AspectRatio w={48} ratio={16 / 9}>
+                    <Image source={{ uri: heroImage }} alt={name} />
+                  </AspectRatio>
+                  {!isMobile && <Text fontSize="xs">{sliceDescription(description)}</Text>}
+                  {/* <Image source={{ uri: heroImage }} size={48} alt={name} /> */}
+                </Center>
+              </VStack>
+            </Link>
+          ))}
+        </Box>
+
       </VStack>
       <ColorModeSwitch />
     </Center>
@@ -87,6 +92,10 @@ function ColorModeSwitch() {
       />
     </Tooltip>
   );
+}
+
+function sliceDescription(text, count = 30) {
+  return text && text.length >= count ? text.slice(0, count) + '...' : text;
 }
 
 export async function getServerSideProps() {
