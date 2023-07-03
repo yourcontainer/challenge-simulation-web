@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
   Center,
@@ -21,10 +21,26 @@ import {
   HamburgerIcon,
 } from "native-base";
 import Header from '../_header';
+
 // Start editing here, save and see your changes.
 export default function ProductDetails(props) {
   const router = useRouter();
   const { pid } = router.query;
+
+  const [product, setProduct] = useState(null)
+
+  useEffect(() => {
+    if(pid) {
+      fetch(`/api/products/${pid}`)
+        .then((res) => {
+          if (!res.ok) {
+            return;
+          }
+          return setProduct(res.json())
+        })
+    }
+  }, [pid]);
+
   return (
     <Center
       flex={1}
