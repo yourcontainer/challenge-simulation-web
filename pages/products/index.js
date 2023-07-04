@@ -13,11 +13,7 @@ import {
   Box,
   Link,
   VStack,
-  Button,
   AspectRatio,
-  Menu,
-  Pressable,
-  HamburgerIcon,
   useBreakpointValue
 } from "native-base";
 import Header from '../_header';

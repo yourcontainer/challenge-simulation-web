@@ -14,33 +14,34 @@ import {
   Box,
   Link,
   VStack,
-  Button,
   AspectRatio,
-  Menu,
-  Pressable,
-  HamburgerIcon,
+  useBreakpointValue
 } from "native-base";
 import Header from '../_header';
 
 // Start editing here, save and see your changes.
 export default function ProductDetails(props) {
+  const flexDir = useBreakpointValue({
+    base: "column",
+    xl: "row"
+  });
+
   const router = useRouter();
   const { pid } = router.query;
 
-  const [product, setProduct] = useState(null)
+  const [product, setProduct] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if(pid) {
       fetch(`/api/products/${pid}`)
-        .then(async (res) => {
-          if (!res.ok) {
-            return;
-          }
-          const product = await res.json();
-          return setProduct(product)
-        })
+        .then(response => response.json())
+        .then(product => setProduct(product), setLoading(false))
+        .catch(() => setLoading(false))
     }
   }, [pid]);
+
+  if(!loading && !product.id) return <Text>Product not found</Text>
 
   return (
     <Center
@@ -61,8 +62,28 @@ export default function ProductDetails(props) {
           </Link>
           <Header />
         </HStack>
-        <Heading size="2xl">Product Detail for ...</Heading>
-        <Text>Need to fetch details for Product ID: {pid}</Text>
+        {!loading ?
+          <Box>
+            <Heading size="2xl">{product.name} ({product.year})</Heading>
+            <Box maxW={600} gap={1}>
+              <Heading>Description</Heading>
+              <Text>{product.description}</Text>
+            </Box>
+
+            <Box maxW={600} flexDirection={flexDir} gap={1} flexWrap="wrap" justifyContent="space-between">
+              {product.images.map((image, key) => (
+                <AspectRatio key={key} w={64} ratio={5 / 3}>
+                  <Image
+                    source={{ uri: `/${image}` }} alt={product.name}
+                  />
+                </AspectRatio>
+              ))}
+            </Box>
+          </Box>
+          :
+          <Heading>Loading...</Heading>
+        }
+
       </VStack>
       <ColorModeSwitch />
     </Center>

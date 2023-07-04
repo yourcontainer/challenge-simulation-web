@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Center,
-  Container,
   useColorMode,
   Tooltip,
   IconButton,
@@ -11,14 +10,9 @@ import {
   HStack,
   Text,
   Heading,
-  Box,
   Link,
   VStack,
-  Button,
   AspectRatio,
-  Menu,
-  HamburgerIcon,
-  Pressable,
 } from "native-base";
 import Header from './_header';
 
